@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head>
+<html lang="zh-TW">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>北賢趣味壘球錦標賽 | BEIXIAN SOFTBALL CHAMPIONSHIP</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&amp;family=Noto+Sans+TC:wght@400;700;900&amp;family=Roboto+Condensed:wght@700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Noto+Sans+TC:wght@400;700;900&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
             --mlb-blue: #002D72;
@@ -26,8 +27,31 @@
             background: linear-gradient(135deg, #001532 0%, #002D72 100%);
         }
         
+        /* 頂部公告跑馬燈 */
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-ticker {
+            display: flex;
+            width: fit-content;
+            animation: ticker 30s linear infinite;
+        }
+        .ticker-item::after {
+            content: "•";
+            margin: 0 2rem;
+            color: #E4002B;
+        }
+
+        .player-marquee {
+            display: flex;
+            white-space: nowrap;
+            width: fit-content;
+            transform: translateX(0);
+        }
+
         @keyframes ballPulse {
-            0 { transform: scale(1); filter: drop-shadow(0 0 5px #E9FF70); }
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px #E9FF70); }
             50% { transform: scale(1.1); filter: drop-shadow(0 0 15px #E9FF70); }
             100% { transform: scale(1); filter: drop-shadow(0 0 5px #E9FF70); }
         }
@@ -40,7 +64,7 @@
             box-shadow: 0 40px 100px -20px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,1);
             z-index: 10;
-            max-width: 450px; /* 限制框框最大寬度 */
+            max-width: 450px;
             margin: 0 auto;
         }
 
@@ -51,43 +75,71 @@
         
         .highlight-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
         .highlight-card:hover {
             transform: translateY(-10px);
             border-color: #E4002B;
         }
 
-        /* 自定義滑桿樣式 */
-        input[type=range]::-webkit-slider-runnable-track {
-            background: #e5e7eb;
-            height: 8px;
-            border-radius: 4px;
+        .checkbox-custom:checked + div {
+            background-color: #002D72;
+            color: white;
+            border-color: #002D72;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            background: #002D72;
-            border: 4px solid #E9FF70;
+            height: 28px;
+            width: 28px;
             border-radius: 50%;
-            margin-top: -8px;
+            background: #E4002B;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(228, 0, 43, 0.3);
+            margin-top: -10px;
+            border: 3px solid white;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background: #e5e7eb;
+            border-radius: 5px;
         }
     </style>
 </head>
-<body class="bg-premium-grey overflow-x-hidden">
+<body class="bg-premium-grey overflow-x-hidden text-left">
 
-    <!-- 置頂橫幅 / Top Bar -->
-    <div class="bg-black h-12 flex items-center justify-center overflow-hidden px-4">
-        <div class="text-white font-bold text-[10px] md:text-sm tracking-[0.1em] md:tracking-[0.2em] whitespace-nowrap">
-            官方聯賽 OFFICIAL LEAGUE • 2026 賽季 SEASON • <span class="mlb-font">BEIXIAN SOFTBALL</span>
+    <!-- 頂部跑馬燈 -->
+    <div class="bg-black text-white py-2 overflow-hidden border-b border-white/10 relative z-[60]">
+        <div class="animate-ticker whitespace-nowrap flex items-center">
+            <div class="flex ticker-content">
+                <span class="ticker-item font-bold italic text-yellow-300">LIVE: 2026 北賢趣味壘球錦標賽 BEIXIAN SOFTBALL CHAMPIONSHIP</span>
+                <span class="ticker-item">地點：新北市福和壘球場 (Location: Fuho Softball Field)</span>
+                <span class="ticker-item text-red-500 font-black">GAME DAY: APRIL 03, 14:00-17:00</span>
+                <span class="ticker-item">今日天氣：適合全壘打的天氣 (Perfect home run weather)</span>
+                <span class="ticker-item text-yellow-300">報到時間：13:30 (Check-in Time)</span>
+            </div>
+            <div class="flex ticker-content">
+                <span class="ticker-item font-bold italic text-yellow-300">LIVE: 2026 北賢趣味壘球錦標賽 BEIXIAN SOFTBALL CHAMPIONSHIP</span>
+                <span class="ticker-item">地點：新北市福和壘球場 (Location: Fuho Softball Field)</span>
+                <span class="ticker-item text-red-500 font-black">GAME DAY: APRIL 03, 14:00-17:00</span>
+                <span class="ticker-item">今日天氣：適合全壘打的天氣 (Perfect home run weather)</span>
+                <span class="ticker-item text-yellow-300">報到時間：13:30 (Check-in Time)</span>
+            </div>
         </div>
     </div>
 
-    <!-- 導覽列 / Navbar -->
+    <!-- 導覽列 -->
     <header class="bg-white sticky top-0 z-50 border-b-4 border-[#002D72] shadow-md">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center text-left">
             <div class="flex items-center gap-4">
                 <div class="relative bg-[#E9FF70] w-14 h-14 rounded-full border-4 border-[#002D72] flex items-center justify-center animate-pulse-ball overflow-hidden shadow-inner shrink-0">
                     <svg class="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 100 100">
@@ -107,8 +159,8 @@
         </div>
     </header>
 
-    <!-- 主視覺區塊 / Hero Section -->
-    <section class="hero-gradient text-white py-16 md:py-24 px-6 relative overflow-hidden">
+    <!-- 主視覺區塊 -->
+    <section class="hero-gradient text-white py-16 md:py-24 px-6 relative overflow-hidden text-left">
         <div class="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-pinstripe rotate-12"></div>
         <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 md:gap-16 relative z-10">
             <div class="w-full lg:w-1/2 space-y-8 md:space-y-10">
@@ -122,283 +174,343 @@
                         <span class="text-sm md:text-lg font-normal opacity-70 italic">Leave your sweat on the dirt and your smiles on the grass.</span>
                     </p>
                 </div>
-                <div class="flex flex-wrap gap-3 md:gap-4">
-                    <div class="bg-white/10 px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/20 font-bold text-sm md:text-base"># 熱血開賽 Game On</div>
-                    <div class="bg-white/10 px-4 md:px-6 py-2 md:py-3 rounded-full border border-white/20 font-bold text-sm md:text-base"># 福和壘球場 Fuho Field</div>
-                </div>
             </div>
             <div class="w-full lg:w-1/2 flex justify-center">
                 <div class="visual-frame transform lg:rotate-2 hover:rotate-0 transition-all duration-700 rounded-lg">
-                    <!-- 圖片容器：設定最大高度與比例，並使用 flex 排版 -->
                     <div class="flex flex-col gap-4 items-center justify-center bg-[#002D72] aspect-[3/4] p-6 rounded-md overflow-hidden max-h-[450px] md:max-h-[550px]">
-                        <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXd46Z-dgrB51v7jZwiIqmI_tELyPyjY85cG3bvYGg8VgtAzlBpgGRRHleTcBOJKxqZorvxPZM3dwe5sDcFnfhim8BuRi4gd5dytWM72RUy1LerU-DGPkjcte0nhIiOvqWmEdgBqSxgHbkfB_wBf81Y-?key=aDEGWuRKCU_79oYu-vODBw" class="w-full h-1/2 object-contain hover:scale-105 transition-transform" alt="活動海報 1">
-                        <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXezIoRXYFrk5MvVyz8ahJoHoGlIAzd-W9aJy1mCpDv3gQk1gHhrsqWgzOIdfLg78Rnc5Wiu62M-3w40C4C07UkvkHKBW35r5qre6ervCUFeP37_9igT45cEPef_32m5dxHbuSpJt7zdJN-hXWLxCh97?key=aDEGWuRKCU_79oYu-vODBw" class="w-full h-1/2 object-contain hover:scale-105 transition-transform" alt="活動海報 2">
+                        <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXd46Z-dgrB51v7jZwiIqmI_tELyPyjY85cG3bvYGg8VgtAzlBpgGRRHleTcBOJKxqZorvxPZM3dwe5sDcFnfhim8BuRi4gd5dytWM72RUy1LerU-DGPkjcte0nhIiOvqWmEdgBqSxgHbkfB_wBf81Y-?key=aDEGWuRKCU_79oYu-vODBw" class="w-full h-1/2 object-contain" alt="Poster 1">
+                        <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXezIoRXYFrk5MvVyz8ahJoHoGlIAzd-W9aJy1mCpDv3gQk1gHhrsqWgzOIdfLg78Rnc5Wiu62M-3w40C4C07UkvkHKBW35r5qre6ervCUFeP37_9igT45cEPef_32m5dxHbuSpJt7zdJN-hXWLxCh97?key=aDEGWuRKCU_79oYu-vODBw" class="w-full h-1/2 object-contain" alt="Poster 2">
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 活動內容區塊 / Event Highlights -->
-    <section class="py-16 md:py-24 px-6 bg-white relative overflow-hidden">
+    <!-- 活動資訊區塊 -->
+    <section class="py-12 bg-white px-6 border-b border-zinc-100 text-left">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="flex gap-4 items-start p-6 bg-zinc-50 rounded-2xl">
+                <div class="text-3xl">📅</div>
+                <div>
+                    <h4 class="font-black text-[#002D72] text-xl">活動時間 <span class="text-sm font-normal text-zinc-400 italic">Time</span></h4>
+                    <p class="text-zinc-600 font-bold">2026年4月3日 (五)<br>14:00 - 17:00</p>
+                    <p class="text-red-600 text-sm font-black mt-1">※ 13:30 開始報到 (Check-in starts)</p>
+                </div>
+            </div>
+            <div class="flex gap-4 items-start p-6 bg-zinc-50 rounded-2xl">
+                <div class="text-3xl">📍</div>
+                <div class="w-full">
+                    <h4 class="font-black text-[#002D72] text-xl">活動地點 <span class="text-sm font-normal text-zinc-400 italic">Location</span></h4>
+                    <p class="text-zinc-600 font-bold mb-2">新北市福和壘球場<br><span class="text-sm opacity-70">(永和區福和橋下)</span></p>
+                    <a href="https://maps.app.goo.gl/Qcy9yaKpd9476QaY8" target="_blank" class="inline-flex items-center gap-2 bg-[#002D72] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-blue-800 transition-all">
+                        📍 查看地圖 View Map
+                    </a>
+                </div>
+            </div>
+            <div class="flex gap-4 items-start p-6 bg-zinc-50 rounded-2xl border-2 border-[#E9FF70]">
+                <div class="text-3xl">🎒</div>
+                <div>
+                    <h4 class="font-black text-[#002D72] text-xl">必備物品 <span class="text-sm font-normal text-zinc-400 italic">Essentials</span></h4>
+                    <p class="text-zinc-600 font-bold text-sm leading-relaxed">水、運動鞋或膠釘鞋<br>手套及球棒(現場可借)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 活動亮點 -->
+    <section class="py-16 md:py-24 px-6 bg-white relative overflow-hidden border-b border-zinc-100 text-left">
         <div class="max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row items-end justify-between mb-12 gap-4">
-                <div class="text-left">
+                <div>
                     <h2 class="text-5xl md:text-7xl font-black text-[#002D72] italic tracking-tighter">活動亮點</h2>
-                    <div class="mlb-font text-lg md:text-2xl text-red-600 font-bold">Event Highlights / Features</div>
+                    <div class="mlb-font text-lg md:text-2xl text-red-600 font-bold">Event Highlights</div>
                 </div>
-                <div class="h-1 w-full md:w-1/2 bg-zinc-100 hidden md:block mb-4"></div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg hover:shadow-2xl">
-                    <div class="text-4xl mb-4">⚾</div>
-                    <h3 class="text-2xl font-black text-[#002D72] mb-2">無限暢打</h3>
-                    <p class="text-zinc-500 font-bold leading-relaxed">站上打擊區，盡情揮灑汗水，體驗揮大棒的快感！</p>
-                    <div class="mt-4 mlb-font text-[10px] text-zinc-400 font-bold">Enjoy unlimited batting practice on the field.</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg h-full">
+                    <div class="text-4xl mb-4 text-left">⚾</div>
+                    <h3 class="text-2xl font-black text-[#002D72] mb-1 text-left">無限暢打</h3>
+                    <div class="text-xs font-bold text-red-600 mb-2 mlb-font text-left">Batting Practice</div>
+                    <p class="text-zinc-500 font-bold text-sm text-left">盡情揮灑汗水！<br><span class="italic font-normal">Feel the heat!</span></p>
                 </div>
-                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg hover:shadow-2xl">
-                    <div class="text-4xl mb-4">🧤</div>
-                    <h3 class="text-2xl font-black text-[#002D72] mb-2">接不完的球</h3>
-                    <p class="text-zinc-500 font-bold leading-relaxed">挑戰滴水不漏的防禦，享受紅土上的美技接殺！</p>
-                    <div class="mt-4 mlb-font text-[10px] text-zinc-400 font-bold">Experience professional fielding and catching.</div>
+                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg h-full">
+                    <div class="text-4xl mb-4 text-left">🧤</div>
+                    <h3 class="text-2xl font-black text-[#002D72] mb-1 text-left">接不完的球</h3>
+                    <div class="text-xs font-bold text-red-600 mb-2 mlb-font text-left">Fielding Drills</div>
+                    <p class="text-zinc-500 font-bold text-sm text-left">挑戰滴水不漏防禦！<br><span class="italic font-normal">Iron defense!</span></p>
                 </div>
-                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg hover:shadow-2xl">
-                    <div class="text-4xl mb-4">🏃‍♂️</div>
-                    <h3 class="text-2xl font-black text-[#002D72] mb-2">跑壘大隊接力</h3>
-                    <p class="text-zinc-500 font-bold leading-relaxed">繞過壘包的速度對決，團隊默契與速度的極致考驗！</p>
-                    <div class="mt-4 mlb-font text-[10px] text-zinc-400 font-bold">Join the exciting base running relay competition.</div>
+                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg h-full">
+                    <div class="text-4xl mb-4 text-left">🏃</div>
+                    <h3 class="text-2xl font-black text-[#002D72] mb-1 text-left">跑壘接力</h3>
+                    <div class="text-xs font-bold text-red-600 mb-2 mlb-font text-left">Base Running Relay</div>
+                    <p class="text-zinc-500 font-bold text-sm text-left">速度與激情的競賽！<br><span class="italic font-normal">Speed & Passion!</span></p>
                 </div>
-                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg hover:shadow-2xl">
-                    <div class="text-4xl mb-4">🎯</div>
-                    <h3 class="text-2xl font-black text-[#002D72] mb-2">夜市王挑戰賽</h3>
-                    <p class="text-zinc-500 font-bold leading-relaxed">包含趣味九宮格、丟桶子挑戰，精準度才是硬道理！</p>
-                    <div class="mt-4 mlb-font text-[10px] text-zinc-400 font-bold">Test your accuracy in fun mini-game challenges.</div>
+                <div class="highlight-card bg-zinc-50 border-l-4 border-[#002D72] p-8 rounded-xl shadow-lg h-full">
+                    <div class="text-4xl mb-4 text-left">🎯</div>
+                    <h3 class="text-2xl font-black text-[#002D72] mb-1 text-left">夜市王挑戰</h3>
+                    <div class="text-xs font-bold text-red-600 mb-2 mlb-font text-left">Skill Games</div>
+                    <p class="text-zinc-500 font-bold text-sm text-left">九宮格、丟桶子！<br><span class="italic font-normal">Fun carnival games!</span></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 活動詳細資訊 / Event Info -->
-    <section class="py-16 md:py-20 px-6 bg-premium-grey">
-        <div class="max-w-7xl mx-auto space-y-8">
-            <div class="bg-[#002D72] text-white p-8 md:p-14 rounded-[2rem] md:rounded-[3rem] shadow-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-red-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 md:gap-12 text-center md:text-left">
-                    <div class="space-y-4">
-                        <h3 class="text-lg md:text-xl font-black opacity-50 uppercase tracking-widest mlb-font">Game Date / 活動日期</h3>
-                        <div class="flex items-center justify-center md:justify-start gap-4 md:gap-6">
-                            <div class="flex flex-col items-center">
-                                <span class="mlb-font text-xl md:text-2xl font-black text-red-500">APR</span>
-                                <span class="text-6xl md:text-8xl font-black leading-none">03</span>
-                            </div>
-                            <div class="h-16 md:h-20 w-1.5 md:w-2 bg-red-600"></div>
-                            <div class="text-3xl md:text-4xl font-black">星期五<br><span class="text-lg md:text-xl opacity-40 mlb-font tracking-widest font-bold">FRIDAY</span></div>
-                        </div>
-                    </div>
-                    <div class="hidden md:block h-32 w-px bg-white/20"></div>
-                    <div class="space-y-4">
-                        <h3 class="text-lg md:text-xl font-black opacity-50 uppercase tracking-widest mlb-font">Game Time / 活動時間</h3>
-                        <div class="text-5xl md:text-7xl font-black italic tracking-tighter">14:00 - 17:00</div>
-                        <div class="flex items-center justify-center md:justify-start gap-2 text-red-400 font-bold text-sm md:text-base mt-2 italic">
-                            <span class="bg-red-600 text-white text-[10px] px-2 py-0.5 rounded mlb-font not-italic">NOTICE</span>
-                            13:30 開始報到 Check-in Starts
-                        </div>
-                    </div>
+    <!-- 選手動態牆 -->
+    <section class="py-12 bg-zinc-900 border-y-4 border-[#E9FF70] text-left">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold mlb-font animate-pulse">LIVE ROSTER</div>
+                <div>
+                    <h2 class="text-2xl font-black text-white italic">目前已報名選手名單 (Current Roster)</h2>
+                    <p class="text-[10px] text-zinc-400 font-bold italic mlb-font">Registered Players List</p>
                 </div>
             </div>
-            
-            <!-- 導航按鈕區塊 -->
-            <div class="bg-zinc-100 p-8 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl border-2 border-zinc-200 flex flex-col md:flex-row items-center justify-between gap-8 relative z-20">
-                <div class="flex items-center gap-6 text-left w-full md:w-auto">
-                    <div class="w-16 h-16 md:w-20 md:h-20 bg-red-600 text-white flex items-center justify-center text-3xl md:text-4xl rounded-2xl shadow-lg rotate-3 shrink-0">
-                        <svg class="w-8 h-8 md:w-10 md:h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl md:text-4xl font-black text-[#002D72]">福和壘球場</h3>
-                        <p class="text-zinc-500 font-bold text-base md:text-lg italic">Fuho Softball Field, New Taipei City</p>
-                    </div>
+            <div class="bg-black/50 rounded-2xl p-6 overflow-hidden h-24 flex items-center relative border border-white/10">
+                <div id="playerRoster" class="player-marquee text-white text-2xl font-black tracking-widest italic">
+                    <span class="px-8 opacity-50">正在載入名單... (Loading...)</span>
                 </div>
-                <a href="https://maps.app.goo.gl/C2UG5R4E3isyaqFAA" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto flex items-center justify-center gap-4 bg-[#002D72] text-white px-8 md:px-12 py-4 md:py-6 rounded-2xl font-black text-lg md:text-xl hover:bg-black transition-all group shadow-xl cursor-pointer">
-                    開啟導航 <span class="mlb-font text-sm opacity-60">Google Maps</span>
-                    <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </a>
             </div>
         </div>
     </section>
 
-    <!-- 報名表單 / Registration Form -->
-    <section id="register" class="py-16 md:py-24 px-6 bg-premium-grey bg-pinstripe">
+    <!-- 報名表單 -->
+    <section id="register" class="py-16 md:py-24 px-6 bg-premium-grey bg-pinstripe text-left">
         <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12 md:text-left flex flex-col items-center md:items-start">
+            <div class="mb-12">
                 <h2 class="text-5xl md:text-7xl font-black text-[#002D72] italic tracking-tighter">立即報名</h2>
-                <div class="mlb-font text-lg md:text-2xl text-red-600 font-bold">Registration / Join the Roster</div>
+                <div class="mlb-font text-lg md:text-2xl text-red-600 font-bold">Register Now</div>
             </div>
 
-            <form id="regForm" class="bg-white p-8 md:p-16 rounded-[2rem] md:rounded-[3rem] shadow-2xl space-y-10 md:space-y-12 border border-zinc-100 relative">
+            <form id="regForm" class="bg-white p-8 md:p-16 rounded-[2rem] shadow-2xl space-y-10 border border-zinc-100 relative">
                 <div class="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-[#002D72] via-red-600 to-[#002D72]"></div>
                 
+                <!-- 姓名 -->
                 <div class="space-y-4">
-                    <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                        👤 選手姓名 <span class="text-zinc-400 text-lg font-bold ml-1">Player Name</span> <span class="text-red-600 text-sm ml-1">*</span>
-                    </label>
-                    <input type="text" name="name" required="" placeholder="您的姓名 Your Full Name" class="w-full border-b-4 border-zinc-100 py-3 md:py-4 text-xl md:text-2xl font-bold focus:border-[#002D72] outline-none bg-transparent transition-all">
+                    <label class="block font-black text-xl text-zinc-800">👤 選手姓名 <span class="text-sm font-normal text-zinc-400 italic">Full Name</span> *</label>
+                    <input type="text" name="name" required placeholder="您的姓名 (Your Name)" class="w-full border-b-4 border-zinc-100 py-3 text-xl font-bold focus:border-[#002D72] outline-none transition-all">
                 </div>
 
+                <!-- 性別 -->
                 <div class="space-y-4">
-                    <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                        ⚖️ 選手性別 <span class="text-zinc-400 text-lg font-bold ml-1">Gender</span> <span class="text-red-600 text-sm ml-1">*</span>
-                    </label>
-                    <div class="grid grid-cols-3 gap-3 md:gap-4">
+                    <label class="block font-black text-xl text-zinc-800">⚖️ 性別 <span class="text-sm font-normal text-zinc-400 italic">Gender</span> *</label>
+                    <div class="grid grid-cols-3 gap-3">
                         <label class="cursor-pointer">
-                            <input type="radio" name="gender" value="男" required="" class="peer sr-only">
-                            <div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black text-lg md:text-xl peer-checked:bg-[#002D72] peer-checked:text-white transition-all">男 <span class="block text-xs md:text-sm font-bold opacity-60">Male</span></div>
+                            <input type="radio" name="gender" value="男" required class="peer sr-only">
+                            <div class="border-2 border-zinc-100 p-3 rounded-xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">男 (M)</div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="gender" value="女" class="peer sr-only">
-                            <div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black text-lg md:text-xl peer-checked:bg-[#002D72] peer-checked:text-white transition-all">女 <span class="block text-xs md:text-sm font-bold opacity-60">Female</span></div>
+                            <div class="border-2 border-zinc-100 p-3 rounded-xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">女 (F)</div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="gender" value="其他" class="peer sr-only">
-                            <div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black text-lg md:text-xl peer-checked:bg-[#002D72] peer-checked:text-white transition-all">其他 <span class="block text-xs md:text-sm font-bold opacity-60">Other</span></div>
+                            <div class="border-2 border-zinc-100 p-3 rounded-xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">其他 (Other)</div>
                         </label>
                     </div>
                 </div>
 
+                <!-- 壘球經驗 -->
                 <div class="space-y-4">
-                    <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                        🎓 壘球經驗 <span class="text-zinc-400 text-lg font-bold ml-1">Exp. (Multiple)</span> <span class="text-red-600 text-sm ml-1">*</span>
-                    </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                        <label class="flex items-center gap-4 p-4 md:p-5 border-2 border-zinc-100 rounded-xl md:rounded-2xl cursor-pointer font-bold transition-colors hover:bg-zinc-50">
-                            <input type="checkbox" name="exp" value="校隊" class="w-6 h-6 accent-[#002D72]">
-                            <div>校隊 / 進階 <span class="block text-xs text-zinc-400">Varsity / Advanced</span></div>
+                    <label class="block font-black text-xl text-zinc-800">⚾ 壘球經驗 <span class="text-sm font-normal text-zinc-400 italic">Softball Experience (Multiple)</span> *</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="experience" value="曾經是校隊" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all peer-checked:bg-[#002D72] peer-checked:text-white">曾經是校隊 (Ex-team)</div>
                         </label>
-                        <label class="flex items-center gap-4 p-4 md:p-5 border-2 border-zinc-100 rounded-xl md:rounded-2xl cursor-pointer font-bold transition-colors hover:bg-zinc-50">
-                            <input type="checkbox" name="exp" value="系隊" class="w-6 h-6 accent-[#002D72]">
-                            <div class="">系隊 / 社團 <span class="block text-xs text-zinc-400">Dept. Team / Club</span></div>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="experience" value="與朋友隨便玩玩" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all peer-checked:bg-[#002D72] peer-checked:text-white">與朋友隨便玩玩 (Casual)</div>
                         </label>
-                        <label class="flex items-center gap-4 p-4 md:p-5 border-2 border-zinc-100 rounded-xl md:rounded-2xl cursor-pointer font-bold transition-colors hover:bg-zinc-50">
-                            <input type="checkbox" name="exp" value="打擊場" class="w-6 h-6 accent-[#002D72]">
-                            <div>打擊練習場 <span class="block text-xs text-zinc-400">Batting Cage</span></div>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="experience" value="玩過大魯閣打擊場" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all peer-checked:bg-[#002D72] peer-checked:text-white">玩過大魯閣打擊場 (Batting Cage)</div>
                         </label>
-                        <label class="flex items-center gap-4 p-4 md:p-5 border-2 border-zinc-100 rounded-xl md:rounded-2xl cursor-pointer font-bold transition-colors hover:bg-zinc-50">
-                            <input type="checkbox" name="exp" value="初學者" class="w-6 h-6 accent-[#002D72]">
-                            <div>完全初學者 <span class="block text-xs text-zinc-400">Total Beginner</span></div>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="experience" value="完全沒有經驗" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all peer-checked:bg-[#002D72] peer-checked:text-white">完全沒有經驗 (No experience)</div>
                         </label>
                     </div>
                 </div>
 
+                <!-- 當天可參與項目 -->
                 <div class="space-y-4">
-                    <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                        🎯 參與項目 <span class="text-zinc-400 text-lg font-bold ml-1">Activities (Multiple)</span> <span class="text-red-600 text-sm ml-1">*</span>
-                    </label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
-                        <label class="cursor-pointer"><input type="checkbox" name="role" value="打擊" class="peer sr-only"><div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">打擊 <span class="block text-[10px] opacity-60">Batting</span></div></label>
-                        <label class="cursor-pointer"><input type="checkbox" name="role" value="守備" class="peer sr-only"><div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">守備 <span class="block text-[10px] opacity-60">Fielding</span></div></label>
-                        <label class="cursor-pointer"><input type="checkbox" name="role" value="加油" class="peer sr-only"><div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">加油 <span class="block text-[10px] opacity-60">Cheering</span></div></label>
-                        <label class="cursor-pointer"><input type="checkbox" name="role" value="紀錄" class="peer sr-only"><div class="border-2 border-zinc-100 p-3 md:p-4 rounded-xl md:rounded-2xl text-center font-black peer-checked:bg-[#002D72] peer-checked:text-white transition-all">紀錄 <span class="block text-[10px] opacity-60">Scorekeep</span></div></label>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                        📢 邀約人 <span class="text-zinc-400 text-lg font-bold ml-1">Invited By</span> <span class="text-red-600 text-sm ml-1">*</span>
-                    </label>
-                    <input type="text" name="inviter" required="" placeholder="是誰邀請您的？ Who invited you?" class="w-full border-b-4 border-zinc-100 py-3 md:py-4 text-lg md:text-xl font-bold focus:border-[#002D72] outline-none bg-transparent transition-all">
-                </div>
-
-                <div class="space-y-6 py-4">
-                    <div class="flex justify-between items-end">
-                        <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                            🔥 對活動的期待 <span class="text-zinc-400 text-lg font-bold ml-1">Expectation</span>
+                    <label class="block font-black text-xl text-zinc-800">⚔️ 當天可參與項目 <span class="text-sm font-normal text-zinc-400 italic">Roles (Multiple)</span></label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="role" value="打擊" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all text-center peer-checked:bg-[#002D72] peer-checked:text-white">打擊 (Bat)</div>
                         </label>
-                        <span id="scoreDisplay" class="mlb-font text-4xl font-black text-red-600 italic">10</span>
-                    </div>
-                    <div class="relative px-2">
-                        <input type="range" name="expectation" min="1" max="10" value="10" class="w-full h-2 bg-zinc-100 rounded-lg appearance-none cursor-pointer" oninput="document.getElementById('scoreDisplay').innerText = this.value">
-                        <div class="flex justify-between mt-4 px-1 text-xs font-black text-zinc-400 mlb-font">
-                            <span>1 (低)</span>
-                            <span>5 (中)</span>
-                            <span>10 (極高)</span>
-                        </div>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="role" value="守備" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all text-center peer-checked:bg-[#002D72] peer-checked:text-white">守備 (Field)</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="role" value="加油" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all text-center peer-checked:bg-[#002D72] peer-checked:text-white">加油 (Cheer)</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="checkbox" name="role" value="紀錄" class="peer sr-only checkbox-custom">
+                            <div class="border-2 border-zinc-100 p-4 rounded-xl font-bold transition-all text-center peer-checked:bg-[#002D72] peer-checked:text-white">紀錄 (Record)</div>
+                        </label>
                     </div>
                 </div>
 
+                <!-- 期待分數 -->
                 <div class="space-y-4">
-                    <label class="block font-black text-xl md:text-2xl text-zinc-800">
-                        💬 最後留言 <span class="text-zinc-400 text-lg font-bold ml-1">Leave a Message</span> <span class="text-zinc-400 text-xs font-normal ml-1">(Optional)</span>
-                    </label>
-                    <textarea name="comment" rows="3" placeholder="想說的話... Anything you want to say?" class="w-full border-2 border-zinc-100 rounded-xl md:rounded-2xl p-4 text-base md:text-lg font-bold focus:border-[#002D72] outline-none bg-zinc-50/50 transition-all resize-none"></textarea>
+                    <div class="flex justify-between items-center text-left">
+                        <label class="block font-black text-xl text-zinc-800">🌟 期待分數 <span class="text-sm font-normal text-zinc-400 italic">Expectation Score</span></label>
+                        <span id="scoreDisplay" class="bg-red-600 text-white px-4 py-1 rounded-full font-black mlb-font text-xl">10</span>
+                    </div>
+                    <div class="pt-4 text-left">
+                        <input type="range" name="expectation" id="expectationRange" min="1" max="10" value="10" class="w-full">
+                    </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-[#002D72] text-white py-8 md:py-10 rounded-[2rem] text-3xl md:text-4xl font-black hover:bg-red-600 transition-all shadow-2xl active:scale-[0.98]">
-                    確認報名 <span class="mlb-font text-base md:text-xl opacity-70">Submit</span>
+                <!-- 邀約人 (移動至此) -->
+                <div class="space-y-4">
+                    <label class="block font-black text-xl text-zinc-800">📢 邀約人 <span class="text-sm font-normal text-zinc-400 italic">Invited By</span> *</label>
+                    <input type="text" name="inviter" required placeholder="誰邀請你來的？ (Who invited you?)" class="w-full border-b-4 border-zinc-100 py-3 text-lg font-bold focus:border-[#002D72] outline-none">
+                </div>
+
+                <!-- 備註 -->
+                <div class="space-y-4">
+                    <label class="block font-black text-xl text-zinc-800">📝 備註 (想對我們說的話) <span class="text-sm font-normal text-zinc-400 italic">Comments</span></label>
+                    <textarea name="comment" rows="3" placeholder="例如：我有球棒可以提供... (Anything to tell us?)" class="w-full border-4 border-zinc-100 p-4 rounded-xl text-lg font-bold focus:border-[#002D72] outline-none"></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-[#002D72] text-white py-8 rounded-[2rem] text-3xl font-black hover:bg-red-600 transition-all shadow-2xl">
+                    確認報名 <span class="mlb-font text-base opacity-70">Submit</span>
                 </button>
             </form>
         </div>
     </section>
 
-    <!-- 成功提示彈窗 / Success Popup -->
+    <!-- 底部聯絡資訊與群組 -->
+    <footer class="bg-zinc-100 py-16 px-6 border-t border-zinc-200 text-center">
+        <div class="max-w-3xl mx-auto space-y-8">
+            <div>
+                <h3 class="text-3xl font-black text-[#002D72] mb-2">聯絡資訊 <span class="text-lg font-normal text-zinc-400 italic">Contact Information</span></h3>
+                <p class="text-zinc-600 font-bold">有任何消息會同步更新在群組，歡迎入群！</p>
+                <p class="text-zinc-400 text-sm italic">All updates will be shared in the group, join us now!</p>
+            </div>
+            
+            <a href="https://line.me/ti/g/P4qUcZMhHL" target="_blank" class="inline-flex items-center gap-4 bg-[#06C755] text-white px-12 py-5 rounded-2xl text-2xl font-black hover:opacity-90 transition-all shadow-xl">
+                <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M24 10.304c0-4.579-4.706-8.304-10.5-8.304s-10.5 3.725-10.5 8.304c0 4.1 3.732 7.525 8.773 8.196.341.073.805.225.922.516.105.263.069.676.034.942l-.151.907c-.046.277-.212 1.085 1.031.591 1.243-.494 6.703-3.951 9.145-6.76 1.666-1.884 2.445-3.601 2.445-5.392zm-14.717 3.327c-.085-.015-.175-.015-.26.015-1.558.55-1.574-.55-1.574-.55v-2.31c0-.188.003-.311.006-.403.006-.11.009-.234.009-.371 0-1.006.815-1.821 1.821-1.821 1.006 0 1.821.815 1.821 1.821v.371c.003.092.006.215.006.403v.258c0 .188-.003.311-.006.403-.006.11-.009.234-.009.371 0 .55-.138.932-.416 1.123-.277.191-.702.311-1.401.311-.001-.001-.001-.001-.001-.001z"/></svg>
+                LINE 群組 (JOIN LINE GROUP)
+            </a>
+            
+            <p class="text-zinc-400 text-xs mt-12">© 2026 BEIXIAN SOFTBALL CHAMPIONSHIP. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <!-- 成功提示彈窗 -->
     <div id="successBox" class="fixed inset-0 bg-[#001532]/95 z-[100] hidden items-center justify-center p-6 backdrop-blur-md">
-        <div class="bg-white p-10 md:p-14 rounded-[3rem] md:rounded-[4rem] text-center max-w-md border-t-[16px] border-red-600 shadow-2xl">
-            <div class="text-7xl md:text-8xl mb-6 md:mb-8 animate-bounce">⚾</div>
-            <h3 class="text-4xl md:text-5xl font-black mb-4 text-[#002D72]">報名成功！</h3>
-            <p class="text-zinc-500 font-bold text-lg md:text-xl mb-10 md:mb-12">Registered Successfully!<br>See you on the field!</p>
-            <button onclick="location.reload()" class="w-full bg-[#002D72] text-white py-4 md:py-5 rounded-full font-bold text-lg md:text-xl hover:bg-red-600 transition-colors uppercase tracking-widest">Close</button>
+        <div class="bg-white p-10 rounded-[3rem] text-center max-w-md border-t-[16px] border-red-600 shadow-2xl">
+            <div class="text-7xl mb-6 animate-bounce">⚾</div>
+            <h3 class="text-4xl font-black mb-4 text-[#002D72]">報名成功！</h3>
+            <p class="text-zinc-600 font-bold mb-8">期待在球場上見到你！ (See you on the field!)</p>
+            <button onclick="location.reload()" class="w-full bg-[#002D72] text-white py-4 rounded-full font-bold">關閉 (CLOSE)</button>
         </div>
     </div>
 
-    <!-- 頁尾 / Footer -->
-    <footer class="bg-[#001532] text-white py-16 md:py-20 px-6 text-center">
-        <div class="text-3xl md:text-4xl font-black tracking-[0.2em] mb-4 md:mb-6 italic opacity-80 uppercase">北賢趣味壘球錦標賽</div>
-        <div class="mlb-font text-xs md:text-sm opacity-40 tracking-widest mb-8">BEIXIAN SOFTBALL CHAMPIONSHIP 2026</div>
-        <div class="w-16 h-1 bg-red-600 mx-auto mb-8"></div>
-        <p class="text-white/40 text-[10px] md:text-xs tracking-widest font-bold uppercase">© 2026 All Rights Reserved • New Taipei City</p>
-    </footer>
-
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzMwB1CvXET2Rh19KXGBzrc4rtMgrPIxnDePSKUzVKbGrdbpN55GtToJjD-h0dbBz7l/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzK86DV3yxvq-h0QtOt635tfLxfSH707U3lp_CWLJfUz3qjfr-90FGpkZBt9syXdhAh/exec';
         const form = document.getElementById('regForm');
         const submitBtn = document.getElementById('submitBtn');
+        const rosterContainer = document.getElementById('playerRoster');
+        const scoreRange = document.getElementById('expectationRange');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+
+        scoreRange.addEventListener('input', (e) => {
+            scoreDisplay.textContent = e.target.value;
+        });
+
+        async function fetchRoster() {
+            try {
+                const response = await fetch(`${scriptURL}?action=getRoster&t=${new Date().getTime()}`);
+                const data = await response.json();
+                
+                if (data && data.players && data.players.length > 0) {
+                    const validPlayers = data.players.filter(name => name && name.trim() !== "");
+                    if (validPlayers.length === 0) {
+                        rosterContainer.innerHTML = `<span class="px-8 text-white/50">目前尚無選手報名 (No players yet)</span>`;
+                        return;
+                    }
+
+                    const playerItems = validPlayers.map((name, index) => 
+                        `<div class="flex items-center mx-8">
+                            <span class="text-[#E9FF70] font-black mr-2">${index + 1}.</span> 
+                            <span>${name}</span>
+                        </div>`
+                    ).join('');
+                    
+                    rosterContainer.innerHTML = playerItems + playerItems;
+                    
+                    const scrollTime = validPlayers.length * 0.6; 
+                    const pauseTime = 3; 
+                    const totalTime = scrollTime + pauseTime;
+                    const scrollPercent = (scrollTime / totalTime) * 100;
+
+                    const styleId = 'dynamic-marquee-style';
+                    let styleEl = document.getElementById(styleId);
+                    if (!styleEl) {
+                        styleEl = document.createElement('style');
+                        styleEl.id = styleId;
+                        document.head.appendChild(styleEl);
+                    }
+
+                    styleEl.innerHTML = `
+                        @keyframes fastPlayerScroll {
+                            0% { transform: translateX(0); }
+                            ${scrollPercent.toFixed(2)}% { transform: translateX(-50%); }
+                            100% { transform: translateX(-50%); }
+                        }
+                        .player-marquee {
+                            animation: fastPlayerScroll ${totalTime.toFixed(2)}s linear infinite !important;
+                        }
+                    `;
+                } else {
+                    rosterContainer.innerHTML = `<span class="px-8 text-white/50">目前尚無選手報名 (No players yet)</span>`;
+                }
+            } catch (error) {
+                rosterContainer.innerHTML = `<span class="px-8 text-red-400">載入失敗 (Load Failed)</span>`;
+            }
+        }
+
+        window.onload = fetchRoster;
 
         form.addEventListener('submit', async e => {
             e.preventDefault();
-            
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="animate-pulse">傳送中... SENDING...</span>';
-            submitBtn.style.backgroundColor = '#666';
-
+            submitBtn.innerHTML = '傳送中... (Submitting...)';
+            
             const formData = new FormData(form);
             const params = new URLSearchParams();
-
             params.append('name', formData.get('name'));
             params.append('gender', formData.get('gender'));
             params.append('inviter', formData.get('inviter'));
             params.append('comment', formData.get('comment'));
             params.append('expectation', formData.get('expectation'));
+            
+            const experiences = [];
+            document.querySelectorAll('input[name="experience"]:checked').forEach(cb => experiences.push(cb.value));
+            params.append('exp', experiences.join(', '));
 
-            const expValues = Array.from(form.querySelectorAll('input[name="exp"]:checked')).map(cb => cb.value);
-            params.append('exp', expValues.join(', '));
-
-            const roleValues = Array.from(form.querySelectorAll('input[name="role"]:checked')).map(cb => cb.value);
-            params.append('role', roleValues.join(', '));
+            const roles = [];
+            document.querySelectorAll('input[name="role"]:checked').forEach(cb => roles.push(cb.value));
+            params.append('role', roles.join(', '));
 
             try {
                 await fetch(scriptURL, { 
                     method: 'POST', 
-                    body: params.toString(),
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
+                    body: params.toString(), 
+                    mode: 'no-cors'
                 });
                 document.getElementById('successBox').classList.replace('hidden', 'flex');
             } catch (error) {
-                console.error('Submission Error:', error);
                 document.getElementById('successBox').classList.replace('hidden', 'flex');
             }
         });
     </script>
-
-</body></html>
+</body>
+</html>
