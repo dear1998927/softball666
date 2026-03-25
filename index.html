@@ -113,6 +113,12 @@
             background: #e5e7eb;
             border-radius: 5px;
         }
+        
+        /* 速度調整專用樣式 */
+        .speed-slider::-webkit-slider-thumb {
+            background: #E9FF70;
+            border: 3px solid #002D72;
+        }
     </style>
 </head>
 <body class="bg-premium-grey overflow-x-hidden text-left">
@@ -258,17 +264,33 @@
     <!-- 選手動態牆 -->
     <section class="py-12 bg-zinc-900 border-y-4 border-[#E9FF70] text-left">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center gap-4 mb-6">
-                <div class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold mlb-font animate-pulse">LIVE ROSTER</div>
-                <div>
-                    <h2 class="text-2xl font-black text-white italic">目前已報名選手名單 (Current Roster)</h2>
-                    <p class="text-[10px] text-zinc-400 font-bold italic mlb-font">Registered Players List</p>
+            <div class="flex items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="bg-red-600 text-white px-3 py-1 rounded text-xs font-bold mlb-font animate-pulse">LIVE ROSTER</div>
+                    <div>
+                        <h2 class="text-2xl font-black text-white italic">目前已報名選手名單 (Current Roster)</h2>
+                        <p class="text-[10px] text-zinc-400 font-bold italic mlb-font">Registered Players List</p>
+                    </div>
+                </div>
+                <!-- 速度調整控制 -->
+                <div class="hidden md:flex flex-col items-end gap-1">
+                    <div class="flex items-center gap-3">
+                        <span class="text-white text-xs font-bold opacity-70">顯示速度 (Speed): <span id="speedValue" class="text-[#E9FF70]">6</span>s</span>
+                        <input type="range" id="speedSlider" min="3" max="15" value="6" class="w-32 speed-slider">
+                    </div>
                 </div>
             </div>
+            
             <div class="bg-black/50 rounded-2xl p-6 overflow-hidden h-24 flex items-center relative border border-white/10">
                 <div id="playerRoster" class="player-marquee text-white text-2xl font-black tracking-widest italic">
                     <span class="px-8 opacity-50">正在載入名單... (Loading...)</span>
                 </div>
+            </div>
+            
+            <!-- 手機版速度調整 -->
+            <div class="flex md:hidden mt-4 items-center justify-between">
+                <span class="text-white text-xs font-bold opacity-70">速度 Speed: <span id="speedValueMobile" class="text-[#E9FF70]">6</span>s</span>
+                <input type="range" id="speedSliderMobile" min="3" max="15" value="6" class="w-1/2 speed-slider">
             </div>
         </div>
     </section>
@@ -420,10 +442,72 @@
         const rosterContainer = document.getElementById('playerRoster');
         const scoreRange = document.getElementById('expectationRange');
         const scoreDisplay = document.getElementById('scoreDisplay');
+        
+        // 速度調整相關元件
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        const speedSliderMobile = document.getElementById('speedSliderMobile');
+        const speedValueMobile = document.getElementById('speedValueMobile');
+
+        let currentScrollDuration = 6; // 預設 6 秒
+        let currentPlayers = [];
+
+        // 同步速度拉條數值
+        function updateSpeed(val) {
+            currentScrollDuration = parseFloat(val);
+            speedValue.textContent = val;
+            speedValueMobile.textContent = val;
+            speedSlider.value = val;
+            speedSliderMobile.value = val;
+            if (currentPlayers.length > 0) renderRoster(currentPlayers);
+        }
+
+        speedSlider.addEventListener('input', (e) => updateSpeed(e.target.value));
+        speedSliderMobile.addEventListener('input', (e) => updateSpeed(e.target.value));
 
         scoreRange.addEventListener('input', (e) => {
             scoreDisplay.textContent = e.target.value;
         });
+
+        // 渲染名單跑馬燈
+        function renderRoster(players) {
+            if (!players || players.length === 0) {
+                rosterContainer.innerHTML = `<span class="px-8 text-white/50">目前尚無選手報名 (No players yet)</span>`;
+                return;
+            }
+
+            const playerItems = players.map((name, index) => 
+                `<div class="flex items-center mx-8">
+                    <span class="text-[#E9FF70] font-black mr-2">${index + 1}.</span> 
+                    <span>${name}</span>
+                </div>`
+            ).join('');
+            
+            rosterContainer.innerHTML = playerItems;
+            
+            const pauseDuration = 3; // 固定停 3 秒
+            const totalDuration = currentScrollDuration + pauseDuration;
+            const scrollPercentage = (currentScrollDuration / totalDuration) * 100;
+
+            const styleId = 'dynamic-marquee-style';
+            let styleEl = document.getElementById(styleId);
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = styleId;
+                document.head.appendChild(styleEl);
+            }
+
+            styleEl.innerHTML = `
+                @keyframes customPlayerScroll {
+                    0% { transform: translateX(100%); }
+                    ${scrollPercentage.toFixed(2)}% { transform: translateX(-100%); }
+                    100% { transform: translateX(-100%); }
+                }
+                .player-marquee {
+                    animation: customPlayerScroll ${totalDuration.toFixed(2)}s linear infinite !important;
+                }
+            `;
+        }
 
         async function fetchRoster() {
             try {
@@ -431,44 +515,8 @@
                 const data = await response.json();
                 
                 if (data && data.players && data.players.length > 0) {
-                    const validPlayers = data.players.filter(name => name && name.trim() !== "");
-                    if (validPlayers.length === 0) {
-                        rosterContainer.innerHTML = `<span class="px-8 text-white/50">目前尚無選手報名 (No players yet)</span>`;
-                        return;
-                    }
-
-                    const playerItems = validPlayers.map((name, index) => 
-                        `<div class="flex items-center mx-8">
-                            <span class="text-[#E9FF70] font-black mr-2">${index + 1}.</span> 
-                            <span>${name}</span>
-                        </div>`
-                    ).join('');
-                    
-                    rosterContainer.innerHTML = playerItems + playerItems;
-                    
-                    const scrollTime = validPlayers.length * 0.6; 
-                    const pauseTime = 3; 
-                    const totalTime = scrollTime + pauseTime;
-                    const scrollPercent = (scrollTime / totalTime) * 100;
-
-                    const styleId = 'dynamic-marquee-style';
-                    let styleEl = document.getElementById(styleId);
-                    if (!styleEl) {
-                        styleEl = document.createElement('style');
-                        styleEl.id = styleId;
-                        document.head.appendChild(styleEl);
-                    }
-
-                    styleEl.innerHTML = `
-                        @keyframes fastPlayerScroll {
-                            0% { transform: translateX(0); }
-                            ${scrollPercent.toFixed(2)}% { transform: translateX(-50%); }
-                            100% { transform: translateX(-50%); }
-                        }
-                        .player-marquee {
-                            animation: fastPlayerScroll ${totalTime.toFixed(2)}s linear infinite !important;
-                        }
-                    `;
+                    currentPlayers = data.players.filter(name => name && name.trim() !== "");
+                    renderRoster(currentPlayers);
                 } else {
                     rosterContainer.innerHTML = `<span class="px-8 text-white/50">目前尚無選手報名 (No players yet)</span>`;
                 }
